@@ -653,7 +653,6 @@ def prepare_forecast_xgboost(forecast_dataframe, test_dataframe):
         max_month_dataframe = max_month_dataframe.append(
             max_month, ignore_index=True
         )
-    max_month_dataframe["hour"] = cut_dataframe["hour"]
 
     # max_month_dataframe.to_excel(
     #     f"{pathlib.Path(__file__).parent.absolute()}/max_month_dataframe.xlsx"
@@ -669,6 +668,8 @@ def prepare_forecast_xgboost(forecast_dataframe, test_dataframe):
         right_on=["gtp", "hour"],
         how="left",
     )
+    test_dataframe.fact.fillna(test_dataframe.def_power, inplace=True)
+    test_dataframe.fillna(0, inplace=True)
     test_dataframe = test_dataframe.merge(
         gtp_dataframe,
         left_on=["gtp", "month", "hour"],
